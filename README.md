@@ -1,4 +1,5 @@
 <h1 align="center">pydantic-validation-decorator</h1>
+<h3 align="center">支持手动调用的实用的pydantic验证装饰器</h3>
 <div align="center">
 
 [![GitHub](https://shields.io/badge/license-MIT-informational)](https://github.com/insistence/pydantic-validation-decorator/blob/master/LICENSE)
