@@ -8,7 +8,7 @@ with open('requirements.txt', encoding='utf-8') as fp:
 
 setup(
     name='pydantic_validation_decorator',
-    version='0.1.0',
+    version='0.1.1',
     author_email='3055204202@qq.com',
     homepage='https://github.com/insistence/pydantic-validation-decorator',
     author='insistence <3055204202@qq.com>',
@@ -25,6 +25,5 @@ setup(
     ],
     url='https://github.com/insistence/pydantic-validation-decorator',
     install_requires=install_requires,
-    package_data={'': ['*.txt', '.toml']},
     include_package_data=True,
 )
