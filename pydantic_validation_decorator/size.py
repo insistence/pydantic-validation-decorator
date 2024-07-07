@@ -113,7 +113,7 @@ class Size:
                                 if self.message
                                 else f'The length of {self.field_name} cannot be greater than {self.max_length}.',
                             )
-                return func(*args, **kwargs)
+                return await func(*args, **kwargs)
 
             return wrapper
 
