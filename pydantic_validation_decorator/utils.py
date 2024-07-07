@@ -25,11 +25,11 @@ class StringUtils:
             return True
 
     @classmethod
-    def is_empty(cls, string) -> bool:
+    def is_empty(cls, string: str) -> bool:
         """Validate if the string is '' or None
 
         Args:
-            string (_type_): String to be validated
+            string (str): String to be validated
 
         Returns:
             bool: Validation results
