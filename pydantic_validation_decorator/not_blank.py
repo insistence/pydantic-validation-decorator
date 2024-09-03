@@ -48,6 +48,8 @@ class NotBlank:
                             message=self.message if self.message else f'{self.field_name} cannot be empty.',
                         )
                 return await func(*args, **kwargs)
+
+            return wrapper
         else:
 
             @wraps(func)
