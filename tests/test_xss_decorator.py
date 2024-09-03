@@ -28,7 +28,7 @@ def test_xss_decorator(xss_test: XssTestModel):
 
 
 def main():
-    xss_test = XssTestModel(user_name='test123')
+    xss_test = XssTestModel()
     try:
         print(test_xss_decorator(xss_test=xss_test))
     except FieldValidationError as e:

@@ -37,7 +37,7 @@ class Xss:
                 validate_model = args[0]
                 if isinstance(validate_model, BaseModel) and hasattr(validate_model, self.field_name):
                     field_value = getattr(validate_model, self.field_name)
-                    if not StringUtils.is_blank(field_value):
+                    if not StringUtils.is_blank(field_value) and field_value is not None:
                         pattern = re.compile(self.HTML_PATTERN)
                         if pattern.search(field_value):
                             raise FieldValidationError(
@@ -60,7 +60,7 @@ class Xss:
                 validate_model = args[0]
                 if isinstance(validate_model, BaseModel) and hasattr(validate_model, self.field_name):
                     field_value = getattr(validate_model, self.field_name)
-                    if not StringUtils.is_blank(field_value):
+                    if not StringUtils.is_blank(field_value) and field_value is not None:
                         pattern = re.compile(self.HTML_PATTERN)
                         if pattern.search(field_value):
                             raise FieldValidationError(
