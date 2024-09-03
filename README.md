@@ -153,10 +153,10 @@ if __name__ == '__main__':
 | 参数名称 | 类型 | 参数说明 | 默认值 |
 | - | - | - | - |
 | `field_name` | str | 需要验证的字段名称 | - |
-| `gt` | float, optional | 数字型字段值必须要大于gt | - |
-| `ge` | float, optional | 数字型字段值必须要大于等于ge | - |
-| `lt` | float, optional | 数字型字段值必须要小于lt | - |
-| `le` | float, optional | 数字型字段值必须要小于等于le | - |
+| `gt` | float or int, optional | 数字型字段值必须要大于gt | - |
+| `ge` | float or int, optional | 数字型字段值必须要大于等于ge | - |
+| `lt` | float or int, optional | 数字型字段值必须要小于lt | - |
+| `le` | float or int, optional | 数字型字段值必须要小于等于le | - |
 | `min_length` | int, optional | 字符串型字段长度不能小于min_length | 0 |
 | `max_length` | int, optional | 字符串型字段长度不能大于max_length | - |
 | `message` | str, optional | 验证失败提示消息 | `'{field_name} must be greater than {gt}.'` OR `'{field_name} must be greater than or equal to {ge}.'` OR `'{field_name} must be less than {lt}.'` OR `'{field_name} must be less than or equal to {le}.'` OR `'The length of {field_name} cannot be less than {min_length}.'` OR `'The length of {field_name} cannot be greater than {max_length}.'` |

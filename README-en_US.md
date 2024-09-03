@@ -153,10 +153,10 @@ if __name__ == '__main__':
 | Parameter | Type | Parameter Description | Default Value |
 | - | - | - | - |
 | `field_name` | str | Field name that need to be validate. | - |
-| `gt` | float, optional | The numerical field value must be greater than gt. | - |
-| `ge` | float, optional | The numerical field value must be greater than or equal to ge. | - |
-| `lt` | float, optional | The numerical field value must be less than lt. | - |
-| `le` | float, optional | The numerical field value must be less than or equal to le. | - |
+| `gt` | float or int, optional | The numerical field value must be greater than gt. | - |
+| `ge` | float or int, optional | The numerical field value must be greater than or equal to ge. | - |
+| `lt` | float or int, optional | The numerical field value must be less than lt. | - |
+| `le` | float or int, optional | The numerical field value must be less than or equal to le. | - |
 | `min_length` | int, optional | The length of a string field cannot be less than min_length. | 0 |
 | `max_length` | int, optional | The length of a string field cannot be greater than max_length. | - |
 | `message` | str, optional | Prompt message for validation failure. Defaults to None. | `'{field_name} must be greater than {gt}.'` OR `'{field_name} must be greater than or equal to {ge}.'` OR `'{field_name} must be less than {lt}.'` OR `'{field_name} must be less than or equal to {le}.'` OR `'The length of {field_name} cannot be less than {min_length}.'` OR `'The length of {field_name} cannot be greater than {max_length}.'` |
