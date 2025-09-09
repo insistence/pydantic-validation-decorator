@@ -22,16 +22,39 @@ class NotBlankTestModel(BaseModel):
         self.get_user_name()
 
 
+class NotBlankAllowUnsetTestModel(BaseModel):
+    user_type: Optional[str] = None
+
+    @NotBlank(
+        field_name='user_type',
+        allow_unset=True,
+        message='user_type cannot be blank',
+    )
+    def get_user_type(self):
+        return self.user_type
+
+    def validate_fields(self):
+        self.get_user_type()
+
+
 @ValidateFields(validate_model='not_blank_test', validate_function='get_user_name')
 def sync_test_not_blank_decorator(not_blank_test: NotBlankTestModel):
     return not_blank_test.model_dump()
 
 
 @ValidateFields(mode='args', validate_model_index=0)
-async def async_test_not_blank_decorator(
-    not_blank_test: NotBlankTestModel,
-):
+async def async_test_not_blank_decorator(not_blank_test: NotBlankTestModel):
     return not_blank_test.model_dump()
+
+
+@ValidateFields(validate_model='not_blank_allow_unset_test', validate_function='get_user_type')
+def sync_test_not_blank_allow_unset_decorator(not_blank_allow_unset_test: NotBlankAllowUnsetTestModel):
+    return not_blank_allow_unset_test.model_dump()
+
+
+@ValidateFields(mode='args', validate_model_index=0)
+async def async_test_not_blank_allow_unset_decorator(not_blank_allow_unset_test: NotBlankAllowUnsetTestModel):
+    return not_blank_allow_unset_test.model_dump()
 
 
 class TestNotBlankDecorator:
@@ -125,3 +148,73 @@ class TestNotBlankDecorator:
         result = await async_test_not_blank_decorator(not_blank_test)
         assert result == {'user_name': '  test  '}
         assert result['user_name'] == '  test  '
+
+    # Tests for allow_unset parameter
+    def test_not_blank_allow_unset_with_unset_field(self):
+        """测试 allow_unset=True 且字段未设置的情况，应该跳过验证"""
+        not_blank_allow_unset_test = NotBlankAllowUnsetTestModel()
+        result = sync_test_not_blank_allow_unset_decorator(not_blank_allow_unset_test=not_blank_allow_unset_test)
+        assert result == {'user_type': None}
+
+    def test_not_blank_allow_unset_with_set_field_none_value(self):
+        """测试 allow_unset=True 且字段被设置为 None 的情况，应该触发验证错误"""
+        not_blank_allow_unset_test = NotBlankAllowUnsetTestModel(user_type=None)
+        with pytest.raises(FieldValidationError) as exc_info:
+            sync_test_not_blank_allow_unset_decorator(not_blank_allow_unset_test=not_blank_allow_unset_test)
+
+        error = exc_info.value
+        assert error.field_name == 'user_type'
+        assert 'user_type cannot be blank' in error.message
+
+    def test_not_blank_allow_unset_with_set_field_empty_string(self):
+        """测试 allow_unset=True 且字段被设置为空字符串的情况，应该触发验证错误"""
+        not_blank_allow_unset_test = NotBlankAllowUnsetTestModel(user_type='')
+        with pytest.raises(FieldValidationError) as exc_info:
+            sync_test_not_blank_allow_unset_decorator(not_blank_allow_unset_test=not_blank_allow_unset_test)
+
+        error = exc_info.value
+        assert error.field_name == 'user_type'
+        assert 'user_type cannot be blank' in error.message
+
+    def test_not_blank_allow_unset_with_set_field_valid_value(self):
+        """测试 allow_unset=True 且字段被设置为有效值的情况，应该通过验证"""
+        not_blank_allow_unset_test = NotBlankAllowUnsetTestModel(user_type='test123')
+        result = sync_test_not_blank_allow_unset_decorator(not_blank_allow_unset_test=not_blank_allow_unset_test)
+        assert result == {'user_type': 'test123'}
+
+
+    @pytest.mark.asyncio
+    async def test_async_not_blank_allow_unset_with_unset_field(self):
+        """测试异步 allow_unset=True 且字段未设置的情况，应该跳过验证"""
+        not_blank_allow_unset_test = NotBlankAllowUnsetTestModel()
+        result = await async_test_not_blank_allow_unset_decorator(not_blank_allow_unset_test)
+        assert result == {'user_type': None}
+
+    @pytest.mark.asyncio
+    async def test_async_not_blank_allow_unset_with_set_field_none_value(self):
+        """测试异步 allow_unset=True 且字段被设置为 None 的情况，应该触发验证错误"""
+        not_blank_allow_unset_test = NotBlankAllowUnsetTestModel(user_type=None)
+        with pytest.raises(FieldValidationError) as exc_info:
+            await async_test_not_blank_allow_unset_decorator(not_blank_allow_unset_test)
+
+        error = exc_info.value
+        assert error.field_name == 'user_type'
+        assert 'user_type cannot be blank' in error.message
+
+    @pytest.mark.asyncio
+    async def test_async_not_blank_allow_unset_with_set_field_empty_string(self):
+        """测试异步 allow_unset=True 且字段被设置为空字符串的情况，应该触发验证错误"""
+        not_blank_allow_unset_test = NotBlankAllowUnsetTestModel(user_type='')
+        with pytest.raises(FieldValidationError) as exc_info:
+            await async_test_not_blank_allow_unset_decorator(not_blank_allow_unset_test)
+
+        error = exc_info.value
+        assert error.field_name == 'user_type'
+        assert 'user_type cannot be blank' in error.message
+
+    @pytest.mark.asyncio
+    async def test_async_not_blank_allow_unset_with_set_field_valid_value(self):
+        """测试异步 allow_unset=True 且字段被设置为有效值的情况，应该通过验证"""
+        not_blank_allow_unset_test = NotBlankAllowUnsetTestModel(user_type='test123')
+        result = await async_test_not_blank_allow_unset_decorator(not_blank_allow_unset_test)
+        assert result == {'user_type': 'test123'}
