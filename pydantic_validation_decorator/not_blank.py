@@ -14,15 +14,14 @@ class NotBlank:
     def __init__(
         self,
         field_name: str,
-        allow_unset: bool = False,
+        allow_unset: Optional[bool] = False,
         message: Optional[str] = None,
     ):
         """Field NotBlank Validation Decorator
 
         Args:
             field_name (str): Field name that need to be validated.
-            allow_unset (bool, optional): If True, validation only runs when the optional field
-                                          is explicitly provided. Defaults to False.
+            allow_unset (Optional[bool], optional): If True, validation only runs when the optional field is explicitly provided. Defaults to False.
             message (Optional[str], optional): Prompt message for validation failure. Defaults to None.
         """
         self.field_name = field_name
@@ -37,8 +36,9 @@ class NotBlank:
             async def wrapper(*args, **kwargs):
                 validate_model = args[0]
                 if isinstance(validate_model, BaseModel) and hasattr(validate_model, self.field_name):
-                    should_validate = (not self.allow_unset) or \
-                                      (self.allow_unset and self.field_name in validate_model.model_fields_set)
+                    should_validate = (not self.allow_unset) or (
+                        self.allow_unset and self.field_name in validate_model.model_fields_set
+                    )
                     if should_validate:
                         field_value = getattr(validate_model, self.field_name)
                         if (
@@ -64,8 +64,9 @@ class NotBlank:
             def wrapper(*args, **kwargs):
                 validate_model = args[0]
                 if isinstance(validate_model, BaseModel) and hasattr(validate_model, self.field_name):
-                    should_validate = (not self.allow_unset) or \
-                                      (self.allow_unset and self.field_name in validate_model.model_fields_set)
+                    should_validate = (not self.allow_unset) or (
+                        self.allow_unset and self.field_name in validate_model.model_fields_set
+                    )
                     if should_validate:
                         field_value = getattr(validate_model, self.field_name)
                         if (
