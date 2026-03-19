@@ -31,13 +31,27 @@ class RequiredIf:
         self.message = message
 
     def _should_validate(self, value: Any) -> bool:
-        """Determine whether conditional required validation should be triggered."""
+        """Determine whether conditional required validation should be triggered.
+
+        Args:
+            value (Any): Current value of the condition field.
+
+        Returns:
+            bool: True when the condition matches and required validation should run.
+        """
         if isinstance(self.when_value, (list, tuple, set, frozenset)):
             return value in self.when_value
         return value == self.when_value
 
     def _is_empty(self, value: Any) -> bool:
-        """Determine whether the value should be treated as empty."""
+        """Determine whether the target field should be treated as empty.
+
+        Args:
+            value (Any): Current value of the target field.
+
+        Returns:
+            bool: True when the value is considered empty for required validation.
+        """
         return value is None or value == '' or value == [] or value == () or value == {}
 
     def __call__(self, func):
