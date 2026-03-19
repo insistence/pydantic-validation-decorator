@@ -1,6 +1,7 @@
 from .validation import ValidateFields
 from .alpha import Alpha
 from .compare import Compare
+from .json_string import JsonString
 from .network import Network
 from .not_blank import NotBlank
 from .pattern import Pattern
@@ -14,6 +15,7 @@ __all__ = [
     'ValidateFields',
     'Alpha',
     'Compare',
+    'JsonString',
     'Network',
     'NotBlank',
     'Pattern',
