@@ -4,6 +4,7 @@ from .compare import Compare
 from .json_string import JsonString
 from .network import Network
 from .not_blank import NotBlank
+from .numeric_precision import NumericPrecision
 from .pattern import Pattern
 from .required_if import RequiredIf
 from .size import Size
@@ -18,6 +19,7 @@ __all__ = [
     'JsonString',
     'Network',
     'NotBlank',
+    'NumericPrecision',
     'Pattern',
     'RequiredIf',
     'Size',
