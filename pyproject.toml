@@ -1,3 +1,41 @@
 [build-system]
 requires = ["setuptools>=42", "wheel"]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "pydantic-validation-decorator"
+version = "0.1.5"
+description = "Some practical pydantic validation decorators that support manual invocation."
+readme = "README.md"
+requires-python = ">=3.9"
+authors = [{name = "insistence", email = "3055204202@qq.com"}]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Framework :: Pydantic",
+]
+dependencies = [
+    "pydantic[email]>=2.7.1",
+]
+
+[project.urls]
+Homepage = "https://github.com/insistence/pydantic-validation-decorator"
+Documentation = "https://github.com/insistence/pydantic-validation-decorator"
+Repository = "https://github.com/insistence/pydantic-validation-decorator"
+Issues = "https://github.com/insistence/pydantic-validation-decorator/issues"
+
+[project.optional-dependencies]
+dev = ["build", "pytest", "pytest-asyncio", "twine"]
+
+[tool.setuptools]
+packages = ["pydantic_validation_decorator"]
