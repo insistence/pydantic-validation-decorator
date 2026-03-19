@@ -136,6 +136,25 @@ if __name__ == '__main__':
 | `mode` | Literal['upper', 'lower', 'mixed'], optional | Validation mode. Options: 'upper' (only uppercase), 'lower' (only lowercase), 'mixed' (both upper and lower). | 'mixed' |
 | `message` | str, optional | Prompt message for validation failure. Defaults to None. | `'{field_name} must contain only letters.'` OR `'{field_name} must contain only uppercase letters.'` OR `'{field_name} must contain only lowercase letters.'` |
 
+### `@Compare`    Field Compare Validation Decorator
+| Parameter | Type | Parameter Description | Default Value |
+| - | - | - | - |
+| `left_field` | str | Left field name used in comparison. | - |
+| `right_field` | str | Right field name used in comparison. | - |
+| `operator` | Literal['eq', 'ne', 'gt', 'ge', 'lt', 'le'], optional | Comparison operator. `eq`(==), `ne`(!=), `gt`(>), `ge`(>=), `lt`(<), `le`(<=). | 'eq' |
+| `allow_none` | bool, optional | If True, skip validation when either compare field is None. | True |
+| `message` | str, optional | Prompt message for validation failure. Defaults to None. | `'{left_field} must satisfy {left_field} {operator_symbol} {right_field}, but got {left_value} and {right_value}.'` |
+
+### `@JsonString`    Field JSON String Validation Decorator
+| Parameter | Type | Parameter Description | Default Value |
+| - | - | - | - |
+| `field_name` | str | Field name that needs to be validated. | - |
+| `require_object` | bool, optional | If True, require JSON root type to be object. | False |
+| `require_array` | bool, optional | If True, require JSON root type to be array. | False |
+| `max_depth` | int, optional | Maximum allowed JSON nesting depth. | - |
+| `allow_none` | bool, optional | If True, skip validation when field value is None. | True |
+| `message` | str, optional | Prompt message for validation failure. Defaults to None. | `'{field_name} must be a valid JSON string: {reason}.'` |
+
 ### `@Network`    Field Network Type Validation Decorator 
 | Parameter | Type | Parameter Description | Default Value |
 | - | - | - | - |
@@ -150,12 +169,30 @@ if __name__ == '__main__':
 | `allow_unset` | bool, optional | If True, validation only runs when the optional field is explicitly provided. | False |
 | `message` | str, optional | Prompt message for validation failure. Defaults to None. | `'{field_name} cannot be empty.'` |
 
+### `@NumericPrecision`   Field Numeric Precision Validation Decorator
+| Parameter | Type | Parameter Description | Default Value |
+| - | - | - | - |
+| `field_name` | str | Field name that needs to be validated. | - |
+| `max_digits` | int, optional | Maximum allowed total digits (integer and decimal digits combined). | - |
+| `decimal_places` | int, optional | Maximum allowed decimal places. | - |
+| `allow_none` | bool, optional | If True, skip validation when field value is None. | True |
+| `allow_string_number` | bool, optional | If True, allow numeric string input for precision validation. | False |
+| `message` | str, optional | Prompt message for validation failure. Defaults to None. | `'{field_name} precision validation failed: {reason}.'` |
+
 ### `@Pattern`    Field Pattern Validation Decorator
 | Parameter | Type | Parameter Description | Default Value |
 | - | - | - | - |
 | `field_name` | str | Field name that need to be validate. | - |
 | `regexp` | str | Regular expression. | - |
 | `message` | str, optional | Prompt message for validation failure. Defaults to None. | `'The format of {field_name} is incorrect.'` |
+
+### `@RequiredIf`   Field Conditional Required Validation Decorator
+| Parameter | Type | Parameter Description | Default Value |
+| - | - | - | - |
+| `field_name` | str | Field name that should become required under condition. | - |
+| `when_field` | str | Condition field name used to trigger required validation. | - |
+| `when_value` | Any | Trigger value for condition field. Supports single value or collection(list/tuple/set/frozenset). | - |
+| `message` | str, optional | Prompt message for validation failure. Defaults to None. | `'{field_name} is required when {when_field} is {when_value}.'` |
 
 ### `@Size`   Field Size Validation Decorator
 | Parameter | Type | Parameter Description | Default Value |
