@@ -145,6 +145,17 @@ if __name__ == '__main__':
 | `allow_none` | bool, optional | If True, skip validation when either compare field is None. | True |
 | `message` | str, optional | Prompt message for validation failure. Defaults to None. | `'{left_field} must satisfy {left_field} {operator_symbol} {right_field}, but got {left_value} and {right_value}.'` |
 
+### `@DateTimeRange`    Field DateTime Range Validation Decorator
+| Parameter | Type | Parameter Description | Default Value |
+| - | - | - | - |
+| `start_field` | str | Start datetime field name. | - |
+| `end_field` | str | End datetime field name. | - |
+| `allow_equal` | bool, optional | If True, allow start datetime equal to end datetime. | True |
+| `allow_none` | bool, optional | If True, skip validation when either field value is None. | True |
+| `coerce_from_str` | bool, optional | If True, allow ISO datetime string conversion for comparison. | True |
+| `require_timezone_consistency` | bool, optional | If True, require both datetimes to be timezone-aware or both timezone-naive. | False |
+| `message` | str, optional | Prompt message for validation failure. Defaults to None. | `'{start_field} must satisfy {start_field} <= {end_field}, but got {start_value} and {end_value}. Reason: {reason}.'` |
+
 ### `@JsonString`    Field JSON String Validation Decorator
 | Parameter | Type | Parameter Description | Default Value |
 | - | - | - | - |

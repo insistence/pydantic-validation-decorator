@@ -145,6 +145,17 @@ if __name__ == '__main__':
 | `allow_none` | bool, optional | 如果为True，当任一比较字段为None时跳过验证 | True |
 | `message` | str, optional | 验证失败提示消息 | `'{left_field} must satisfy {left_field} {operator_symbol} {right_field}, but got {left_value} and {right_value}.'` |
 
+### `@DateTimeRange`    字段时间范围验证装饰器
+| 参数名称 | 类型 | 参数说明 | 默认值 |
+| - | - | - | - |
+| `start_field` | str | 开始时间字段名称 | - |
+| `end_field` | str | 结束时间字段名称 | - |
+| `allow_equal` | bool, optional | 如果为True，允许开始时间与结束时间相等 | True |
+| `allow_none` | bool, optional | 如果为True，当任一字段值为None时跳过验证 | True |
+| `coerce_from_str` | bool, optional | 如果为True，允许ISO时间字符串自动解析为datetime参与比较 | True |
+| `require_timezone_consistency` | bool, optional | 如果为True，要求开始/结束时间同时为有时区或无时区 | False |
+| `message` | str, optional | 验证失败提示消息 | `'{start_field} must satisfy {start_field} <= {end_field}, but got {start_value} and {end_value}. Reason: {reason}.'` |
+
 ### `@JsonString`    字段JSON字符串验证装饰器
 | 参数名称 | 类型 | 参数说明 | 默认值 |
 | - | - | - | - |
