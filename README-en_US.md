@@ -129,13 +129,6 @@ if __name__ == '__main__':
 | `validate_model_index` | int, optional | The index of the `Pydantic` model that needs to be validated in the function.(obtained from positional parameters) | - |
 | `validate_function` | str, optional | The name of the validation function defined in the `Pydantic` model. | 'validate_fields' |
 
-### `@Alpha`    Field Alpha Validation Decorator
-| Parameter | Type | Parameter Description | Default Value |
-| - | - | - | - |
-| `field_name` | str | Field name that need to be validate. | - |
-| `mode` | Literal['upper', 'lower', 'mixed'], optional | Validation mode. Options: 'upper' (only uppercase), 'lower' (only lowercase), 'mixed' (both upper and lower). | 'mixed' |
-| `message` | str, optional | Prompt message for validation failure. Defaults to None. | `'{field_name} must contain only letters.'` OR `'{field_name} must contain only uppercase letters.'` OR `'{field_name} must contain only lowercase letters.'` |
-
 ### `@AllowedValues`    Field Allowed Values Validation Decorator
 | Parameter | Type | Parameter Description | Default Value |
 | - | - | - | - |
@@ -144,6 +137,13 @@ if __name__ == '__main__':
 | `allow_none` | bool, optional | If True, skip validation when field value is None. | True |
 | `case_sensitive` | bool, optional | If False, compare string values case-insensitively. | True |
 | `message` | str, optional | Prompt message for validation failure. Defaults to None. | `'{field_name} must be one of {choices}.'` |
+
+### `@Alpha`    Field Alpha Validation Decorator
+| Parameter | Type | Parameter Description | Default Value |
+| - | - | - | - |
+| `field_name` | str | Field name that need to be validate. | - |
+| `mode` | Literal['upper', 'lower', 'mixed'], optional | Validation mode. Options: 'upper' (only uppercase), 'lower' (only lowercase), 'mixed' (both upper and lower). | 'mixed' |
+| `message` | str, optional | Prompt message for validation failure. Defaults to None. | `'{field_name} must contain only letters.'` OR `'{field_name} must contain only uppercase letters.'` OR `'{field_name} must contain only lowercase letters.'` |
 
 ### `@Compare`    Field Compare Validation Decorator
 | Parameter | Type | Parameter Description | Default Value |
