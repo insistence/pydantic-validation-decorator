@@ -223,6 +223,15 @@ if __name__ == '__main__':
 | `field_name` | str | 需要验证的字段名称 | - |
 | `message` | str, optional | 验证失败提示消息 | `'{field_name} cannot contain script characters.'` |
 
+### `@AllowedValues`    字段枚举值验证装饰器
+| 参数名称 | 类型 | 参数说明 | 默认值 |
+| - | - | - | - |
+| `field_name` | str | 需要验证的字段名称 | - |
+| `choices` | Iterable[Any] | 字段允许的值集合 | - |
+| `allow_none` | bool, optional | 如果为 True，当字段值为 None 时跳过验证 | True |
+| `case_sensitive` | bool, optional | 如果为 False，字符串值按大小写不敏感比较 | True |
+| `message` | str, optional | 验证失败提示消息 | `'{field_name} must be one of {choices}.'` |
+
 <a name="contribute" ></a>
 
 ## 参与贡献
