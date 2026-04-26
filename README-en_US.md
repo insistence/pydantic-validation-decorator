@@ -145,6 +145,13 @@ if __name__ == '__main__':
 | `mode` | Literal['upper', 'lower', 'mixed'], optional | Validation mode. Options: 'upper' (only uppercase), 'lower' (only lowercase), 'mixed' (both upper and lower). | 'mixed' |
 | `message` | str, optional | Prompt message for validation failure. Defaults to None. | `'{field_name} must contain only letters.'` OR `'{field_name} must contain only uppercase letters.'` OR `'{field_name} must contain only lowercase letters.'` |
 
+### `@AtLeastOneOf`    Field At Least One Of Validation Decorator
+| Parameter | Type | Parameter Description | Default Value |
+| - | - | - | - |
+| `fields` | list[str] | Field names where at least `min_count` fields must be provided. | - |
+| `min_count` | int, optional | Minimum number of fields that must be provided. | 1 |
+| `message` | str, optional | Prompt message for validation failure. Defaults to None. | `'At least {min_count} of {fields} must be provided.'` |
+
 ### `@Compare`    Field Compare Validation Decorator
 | Parameter | Type | Parameter Description | Default Value |
 | - | - | - | - |
