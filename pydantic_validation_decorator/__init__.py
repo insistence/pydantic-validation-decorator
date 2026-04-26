@@ -1,5 +1,6 @@
 from .validation import ValidateFields
 from .alpha import Alpha
+from .allowed_values import AllowedValues
 from .compare import Compare
 from .datetime_range import DateTimeRange
 from .json_string import JsonString
@@ -16,6 +17,7 @@ from .exceptions import FieldValidationError
 __all__ = [
     'ValidateFields',
     'Alpha',
+    'AllowedValues',
     'Compare',
     'DateTimeRange',
     'JsonString',
