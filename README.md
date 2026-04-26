@@ -145,6 +145,13 @@ if __name__ == '__main__':
 | `mode` | Literal['upper', 'lower', 'mixed'], optional | 验证模式。可选项：'upper'（仅大写字母）、'lower'（仅小写字母）、'mixed'（大小写混合） | 'mixed' |
 | `message` | str, optional | 验证失败提示消息 | `'{field_name} must contain only letters.'` OR `'{field_name} must contain only uppercase letters.'` OR `'{field_name} must contain only lowercase letters.'` |
 
+### `@AtLeastOneOf`    字段至少一个必填验证装饰器
+| 参数名称 | 类型 | 参数说明 | 默认值 |
+| - | - | - | - |
+| `fields` | list[str] | 至少需要提供 `min_count` 个值的字段名称列表 | - |
+| `min_count` | int, optional | 最少需要提供的字段数量 | 1 |
+| `message` | str, optional | 验证失败提示消息 | `'At least {min_count} of {fields} must be provided.'` |
+
 ### `@Compare`    字段比较验证装饰器
 | 参数名称 | 类型 | 参数说明 | 默认值 |
 | - | - | - | - |
