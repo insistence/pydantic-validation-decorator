@@ -129,6 +129,15 @@ if __name__ == '__main__':
 | `validate_model_index` | int, optional | The index of the `Pydantic` model that needs to be validated in the function.(obtained from positional parameters) | - |
 | `validate_function` | str, optional | The name of the validation function defined in the `Pydantic` model. | 'validate_fields' |
 
+### `@AllowedValues`    Field Allowed Values Validation Decorator
+| Parameter | Type | Parameter Description | Default Value |
+| - | - | - | - |
+| `field_name` | str | Field name that needs to be validated. | - |
+| `choices` | Iterable[Any] | Allowed values for the field. | - |
+| `allow_none` | bool, optional | If True, skip validation when field value is None. | True |
+| `case_sensitive` | bool, optional | If False, compare string values case-insensitively. | True |
+| `message` | str, optional | Prompt message for validation failure. Defaults to None. | `'{field_name} must be one of {choices}.'` |
+
 ### `@Alpha`    Field Alpha Validation Decorator
 | Parameter | Type | Parameter Description | Default Value |
 | - | - | - | - |
