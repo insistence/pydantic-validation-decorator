@@ -18,6 +18,9 @@
 <a name="install" ></a>
 
 ## 安装
+
+需要 Python 3.10 或更高版本。
+
 ```bash
 pip install pydantic-validation-decorator -U
 ```
@@ -77,7 +80,13 @@ if __name__ == '__main__':
 ```
 调用这个函数最后的输出结果为：
 ```python
-{'model_name': 'NotBlankTestModel', 'field_name': 'user_name', 'field_value': None, 'validator': 'NotBlank', 'message': 'user_name cannot be blank'}
+{
+    'model_name': 'NotBlankTestModel',
+    'field_name': 'user_name',
+    'field_value': None,
+    'validator': 'NotBlank',
+    'message': 'user_name cannot be blank',
+}
 ```
 完整的代码示例为：
 ```python

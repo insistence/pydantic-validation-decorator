@@ -1,34 +1,33 @@
 import json
-from asyncio import iscoroutinefunction
-from functools import wraps
-from typing import Optional, Any
+from typing import Any, NoReturn
+
 from pydantic import BaseModel
+
+from ._decorators import FieldValidator
 from .exceptions import FieldValidationError
 
 
-class JsonString:
-    """
-    Field JSON String Validation Decorator
-    """
+class JsonString(FieldValidator):
+    """Field JSON String Validation Decorator."""
 
     def __init__(
         self,
         field_name: str,
         require_object: bool = False,
         require_array: bool = False,
-        max_depth: Optional[int] = None,
+        max_depth: int | None = None,
         allow_none: bool = True,
-        message: Optional[str] = None,
-    ):
-        """Field JSON String Validation Decorator
+        message: str | None = None,
+    ) -> None:
+        """Configure JSON validation for a string field.
 
         Args:
-            field_name (str): Field name that needs to be validated.
-            require_object (bool, optional): Require parsed JSON to be an object. Defaults to False.
-            require_array (bool, optional): Require parsed JSON to be an array. Defaults to False.
-            max_depth (Optional[int], optional): Maximum allowed JSON nesting depth. Defaults to None.
-            allow_none (bool, optional): If True, skip validation when field value is None. Defaults to True.
-            message (Optional[str], optional): Prompt message for validation failure. Defaults to None.
+            field_name: Name of the field to validate.
+            require_object: Require parsed JSON to be an object. Defaults to False.
+            require_array: Require parsed JSON to be an array. Defaults to False.
+            max_depth: Maximum allowed JSON nesting depth. Defaults to None.
+            allow_none: If True, skip validation when field value is None. Defaults to True.
+            message: Custom error message to use when validation fails.
 
         Raises:
             ValueError: require_object and require_array cannot both be True. max_depth cannot be less than 1.
@@ -48,10 +47,10 @@ class JsonString:
         """Calculate JSON nesting depth.
 
         Args:
-            value (Any): Parsed JSON value.
+            value: Parsed JSON value.
 
         Returns:
-            int: Calculated nesting depth, minimum is 1.
+            Calculated nesting depth, minimum is 1.
         """
         if isinstance(value, dict):
             if not value:
@@ -67,10 +66,10 @@ class JsonString:
         """Build default validation message based on failure reason.
 
         Args:
-            reason (str): Failure reason for JSON validation.
+            reason: Failure reason for JSON validation.
 
         Returns:
-            str: Default validation message.
+            Default validation message.
         """
         return f'{self.field_name} must be a valid JSON string: {reason}.'
 
@@ -79,13 +78,13 @@ class JsonString:
         validate_model: BaseModel,
         field_value: Any,
         reason: str,
-    ):
+    ) -> NoReturn:
         """Raise a standardized field validation error.
 
         Args:
-            validate_model (BaseModel): Pydantic model instance under validation.
-            field_value (Any): Current field value.
-            reason (str): Failure reason for JSON validation.
+            validate_model: Pydantic model instance under validation.
+            field_value: Current field value.
+            reason: Failure reason for JSON validation.
 
         Raises:
             FieldValidationError: Raised when JSON validation fails.
@@ -98,12 +97,14 @@ class JsonString:
             message=self.message if self.message else self._build_default_message(reason),
         )
 
-    def _validate_json_string(self, validate_model: BaseModel):
+    def _validate(self, validate_model: BaseModel) -> None:
         """Execute JSON string validation for the current model instance.
 
         Args:
-            validate_model (BaseModel): Pydantic model instance under validation.
+            validate_model: Pydantic model instance under validation.
         """
+        if not hasattr(validate_model, self.field_name):
+            return
         field_value = getattr(validate_model, self.field_name)
         if field_value is None and self.allow_none:
             return
@@ -125,26 +126,3 @@ class JsonString:
                     field_value,
                     f'JSON depth {depth} exceeds max_depth {self.max_depth}',
                 )
-
-    def __call__(self, func):
-        is_async = iscoroutinefunction(func)
-        if is_async:
-
-            @wraps(func)
-            async def wrapper(*args, **kwargs):
-                validate_model = args[0]
-                if isinstance(validate_model, BaseModel) and hasattr(validate_model, self.field_name):
-                    self._validate_json_string(validate_model)
-                return await func(*args, **kwargs)
-
-            return wrapper
-        else:
-
-            @wraps(func)
-            def wrapper(*args, **kwargs):
-                validate_model = args[0]
-                if isinstance(validate_model, BaseModel) and hasattr(validate_model, self.field_name):
-                    self._validate_json_string(validate_model)
-                return func(*args, **kwargs)
-
-            return wrapper

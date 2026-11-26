@@ -1,37 +1,26 @@
 class StringUtils:
-    """
-    String Utils Class
-    """
+    """String Utils Class."""
 
     @classmethod
-    def is_blank(cls, string: str) -> bool:
-        """Validate if the string is '' or all spaces
+    def is_blank(cls, string: str | None) -> bool:
+        """Validate if the string is '' or all spaces.
 
         Args:
-            string (str): String to be validated
+            string: String to be validated.
 
         Returns:
-            bool: Validation results
+            Validation results.
         """
-        if string is None:
-            return False
-        str_len = len(string)
-        if str_len == 0:
-            return True
-        else:
-            for i in range(str_len):
-                if string[i] != ' ':
-                    return False
-            return True
+        return string is not None and all(char == ' ' for char in string)
 
     @classmethod
-    def is_empty(cls, string: str) -> bool:
-        """Validate if the string is '' or None
+    def is_empty(cls, string: str | None) -> bool:
+        """Validate if the string is '' or None.
 
         Args:
-            string (str): String to be validated
+            string: String to be validated.
 
         Returns:
-            bool: Validation results
+            Validation results.
         """
         return string is None or len(string) == 0

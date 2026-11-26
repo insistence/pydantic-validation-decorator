@@ -18,6 +18,9 @@ English | [简体中文](./README.md)
 <a name="install" ></a>
 
 ## Install
+
+Requires Python 3.10 or later.
+
 ```bash
 pip install pydantic-validation-decorator -U
 ```
@@ -77,7 +80,13 @@ if __name__ == '__main__':
 ```
 The final output result of calling this function is：
 ```python
-{'model_name': 'NotBlankTestModel', 'field_name': 'user_name', 'field_value': None, 'validator': 'NotBlank', 'message': 'user_name cannot be blank'}
+{
+    'model_name': 'NotBlankTestModel',
+    'field_name': 'user_name',
+    'field_value': None,
+    'validator': 'NotBlank',
+    'message': 'user_name cannot be blank',
+}
 ```
 The complete code example is：
 ```python
