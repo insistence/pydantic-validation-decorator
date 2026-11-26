@@ -1,15 +1,14 @@
-from asyncio import iscoroutinefunction
 from datetime import datetime
-from functools import wraps
-from typing import Any, Optional
+from typing import Any, NoReturn
+
 from pydantic import BaseModel
+
+from ._decorators import FieldValidator
 from .exceptions import FieldValidationError
 
 
-class DateTimeRange:
-    """
-    Field DateTime Range Validation Decorator
-    """
+class DateTimeRange(FieldValidator):
+    """Field DateTime Range Validation Decorator."""
 
     def __init__(
         self,
@@ -19,18 +18,20 @@ class DateTimeRange:
         allow_none: bool = True,
         coerce_from_str: bool = True,
         require_timezone_consistency: bool = False,
-        message: Optional[str] = None,
-    ):
-        """Field DateTime Range Validation Decorator
+        message: str | None = None,
+    ) -> None:
+        """Configure the ordering and timezone checks for two datetime fields.
 
         Args:
-            start_field (str): Start datetime field name.
-            end_field (str): End datetime field name.
-            allow_equal (bool, optional): If True, allow start datetime equal to end datetime. Defaults to True.
-            allow_none (bool, optional): If True, skip validation when either field value is None. Defaults to True.
-            coerce_from_str (bool, optional): If True, allow ISO datetime string and convert to datetime. Defaults to True.
-            require_timezone_consistency (bool, optional): If True, require start and end datetime to be both timezone-aware or both timezone-naive. Defaults to False.
-            message (Optional[str], optional): Prompt message for validation failure. Defaults to None.
+            start_field: Start datetime field name.
+            end_field: End datetime field name.
+            allow_equal: If True, allow start datetime equal to end datetime. Defaults to True.
+            allow_none: If True, skip validation when either field value is None. Defaults to True.
+            coerce_from_str: If True, allow ISO datetime string and convert to datetime. Defaults to
+                True.
+            require_timezone_consistency: If True, require start and end datetime to be both
+                timezone-aware or both timezone-naive. Defaults to False.
+            message: Custom error message to use when validation fails.
 
         Raises:
             ValueError: start_field and end_field cannot be the same.
@@ -49,21 +50,21 @@ class DateTimeRange:
         """Determine whether datetime value is timezone-aware.
 
         Args:
-            value (datetime): Datetime value under validation.
+            value: Datetime value under validation.
 
         Returns:
-            bool: True when datetime is timezone-aware.
+            True when datetime is timezone-aware.
         """
         return value.tzinfo is not None and value.tzinfo.utcoffset(value) is not None
 
-    def _to_datetime(self, value: Any) -> Optional[datetime]:
+    def _to_datetime(self, value: Any) -> datetime | None:
         """Convert input value to datetime.
 
         Args:
-            value (Any): Current field value.
+            value: Current field value.
 
         Returns:
-            Optional[datetime]: Converted datetime value, or None when conversion fails.
+            Converted datetime value, or None when conversion fails.
         """
         if isinstance(value, datetime):
             return value
@@ -78,11 +79,11 @@ class DateTimeRange:
         """Build default validation message for datetime range failure.
 
         Args:
-            start_value (Any): Current start field value.
-            end_value (Any): Current end field value.
+            start_value: Current start field value.
+            end_value: Current end field value.
 
         Returns:
-            str: Default validation message.
+            Default validation message.
         """
         operator = '<=' if self.allow_equal else '<'
         return (
@@ -96,14 +97,14 @@ class DateTimeRange:
         start_value: Any,
         end_value: Any,
         reason: str,
-    ):
+    ) -> NoReturn:
         """Raise a standardized field validation error.
 
         Args:
-            validate_model (BaseModel): Pydantic model instance under validation.
-            start_value (Any): Current start field value.
-            end_value (Any): Current end field value.
-            reason (str): Validation failure reason.
+            validate_model: Pydantic model instance under validation.
+            start_value: Current start field value.
+            end_value: Current end field value.
+            reason: Validation failure reason.
 
         Raises:
             FieldValidationError: Raised when datetime range validation fails.
@@ -117,12 +118,14 @@ class DateTimeRange:
             message=self.message if self.message else default_message,
         )
 
-    def _validate_datetime_range(self, validate_model: BaseModel):
+    def _validate(self, validate_model: BaseModel) -> None:
         """Execute datetime range validation for current model instance.
 
         Args:
-            validate_model (BaseModel): Pydantic model instance under validation.
+            validate_model: Pydantic model instance under validation.
         """
+        if not hasattr(validate_model, self.start_field) or not hasattr(validate_model, self.end_field):
+            return
         start_value = getattr(validate_model, self.start_field)
         end_value = getattr(validate_model, self.end_field)
         if self.allow_none and (start_value is None or end_value is None):
@@ -159,34 +162,3 @@ class DateTimeRange:
                 end_value,
                 'datetime range comparison failed',
             )
-
-    def __call__(self, func):
-        is_async = iscoroutinefunction(func)
-        if is_async:
-
-            @wraps(func)
-            async def wrapper(*args, **kwargs):
-                validate_model = args[0]
-                if (
-                    isinstance(validate_model, BaseModel)
-                    and hasattr(validate_model, self.start_field)
-                    and hasattr(validate_model, self.end_field)
-                ):
-                    self._validate_datetime_range(validate_model)
-                return await func(*args, **kwargs)
-
-            return wrapper
-        else:
-
-            @wraps(func)
-            def wrapper(*args, **kwargs):
-                validate_model = args[0]
-                if (
-                    isinstance(validate_model, BaseModel)
-                    and hasattr(validate_model, self.start_field)
-                    and hasattr(validate_model, self.end_field)
-                ):
-                    self._validate_datetime_range(validate_model)
-                return func(*args, **kwargs)
-
-            return wrapper

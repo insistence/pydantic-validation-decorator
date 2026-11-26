@@ -1,16 +1,14 @@
-from asyncio import iscoroutinefunction
-from functools import wraps
-from typing import Any, Iterable, Optional
+from collections.abc import Iterable
+from typing import Any
 
 from pydantic import BaseModel
 
+from ._decorators import FieldValidator
 from .exceptions import FieldValidationError
 
 
-class AllowedValues:
-    """
-    Field Allowed Values Validation Decorator
-    """
+class AllowedValues(FieldValidator):
+    """Field Allowed Values Validation Decorator."""
 
     def __init__(
         self,
@@ -18,16 +16,16 @@ class AllowedValues:
         choices: Iterable[Any],
         allow_none: bool = True,
         case_sensitive: bool = True,
-        message: Optional[str] = None,
-    ):
-        """Field Allowed Values Validation Decorator
+        message: str | None = None,
+    ) -> None:
+        """Configure the set of allowed field values.
 
         Args:
-            field_name (str): Field name that needs to be validated.
-            choices (Iterable[Any]): Allowed values for the field.
-            allow_none (bool, optional): If True, skip validation when field value is None. Defaults to True.
-            case_sensitive (bool, optional): If False, compare string values case-insensitively. Defaults to True.
-            message (Optional[str], optional): Prompt message for validation failure. Defaults to None.
+            field_name: Name of the field to validate.
+            choices: Allowed values for the field.
+            allow_none: If True, skip validation when field value is None. Defaults to True.
+            case_sensitive: If False, compare string values case-insensitively. Defaults to True.
+            message: Custom error message to use when validation fails.
 
         Raises:
             ValueError: choices cannot be empty.
@@ -44,10 +42,10 @@ class AllowedValues:
         """Normalize value before comparison.
 
         Args:
-            value (Any): Current value that needs normalization.
+            value: Current value that needs normalization.
 
         Returns:
-            Any: Normalized value used for comparison.
+            Normalized value used for comparison.
         """
         if isinstance(value, str) and not self.case_sensitive:
             return value.lower()
@@ -57,19 +55,21 @@ class AllowedValues:
         """Build the default validation message.
 
         Returns:
-            str: Default validation message.
+            Default validation message.
         """
         return f'{self.field_name} must be one of {self.choices}.'
 
-    def _validate_allowed_values(self, validate_model: BaseModel):
+    def _validate(self, validate_model: BaseModel) -> None:
         """Execute allowed values validation for the current model instance.
 
         Args:
-            validate_model (BaseModel): Pydantic model instance under validation.
+            validate_model: Pydantic model instance under validation.
 
         Raises:
             FieldValidationError: Raised when the field value is not in the allowed values.
         """
+        if not hasattr(validate_model, self.field_name):
+            return
         field_value = getattr(validate_model, self.field_name)
         if field_value is None and self.allow_none:
             return
@@ -84,26 +84,3 @@ class AllowedValues:
                 validator=self.__class__.__name__,
                 message=self.message if self.message else self._build_default_message(),
             )
-
-    def __call__(self, func):
-        is_async = iscoroutinefunction(func)
-        if is_async:
-
-            @wraps(func)
-            async def wrapper(*args, **kwargs):
-                validate_model = args[0]
-                if isinstance(validate_model, BaseModel) and hasattr(validate_model, self.field_name):
-                    self._validate_allowed_values(validate_model)
-                return await func(*args, **kwargs)
-
-            return wrapper
-        else:
-
-            @wraps(func)
-            def wrapper(*args, **kwargs):
-                validate_model = args[0]
-                if isinstance(validate_model, BaseModel) and hasattr(validate_model, self.field_name):
-                    self._validate_allowed_values(validate_model)
-                return func(*args, **kwargs)
-
-            return wrapper
